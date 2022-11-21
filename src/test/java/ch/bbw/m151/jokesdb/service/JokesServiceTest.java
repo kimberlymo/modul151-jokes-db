@@ -12,10 +12,9 @@ import static org.junit.jupiter.api.Assertions.*;
 public class JokesServiceTest extends TestHelper {
 
     @Test
-    public void createJokeSuccessful() throws BadAttributeValueExpException {
-        Mockito.when(getRemoteApiService().getJokeFilteredByCategory("")).then(r -> getData());
-
+    public void createJokeSuccessful() {
         Joke result = getJokesService().getJokeFilteredByCategory("programming");
+
         assertNotNull(result);
         assertNotNull(result.getJoke());
     }
