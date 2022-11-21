@@ -9,11 +9,11 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "jokes")
+@Table(name = "joke")
 @Accessors(chain = true)
 @Getter
 @Setter
-public class JokesEntity {
+public class Joke {
 
 	@Version
 	private Long version = 1L;

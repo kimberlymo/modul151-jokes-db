@@ -3,26 +3,25 @@ package ch.bbw.m151.jokesdb.service;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.List;
 
-import ch.bbw.m151.jokesdb.datamodel.JokesEntity;
+import ch.bbw.m151.jokesdb.datamodel.Joke;
 import ch.bbw.m151.jokesdb.repository.JokesRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
+@RequiredArgsConstructor
 public class JokesService {
 
-	private static final Logger log = LoggerFactory.getLogger(JokesService.class);
-
 	private final JokesRepository jokesRepository;
-
-	public JokesService(JokesRepository jokesRepository) {
-		this.jokesRepository = jokesRepository;
-	}
+	private final RemoteApiService remoteApiService;
 
 	@EventListener(ContextRefreshedEvent.class)
 	public void preloadDatabase() {
@@ -34,11 +33,33 @@ public class JokesService {
 		try (var lineStream = Files.lines(new ClassPathResource("chucknorris.txt").getFile()
 				.toPath(), StandardCharsets.UTF_8)) {
 			var jokes = lineStream.filter(x -> !x.isEmpty())
-					.map(x -> new JokesEntity().setJoke(x))
+					.map(x -> new Joke().setJoke(x))
 					.toList();
 			jokesRepository.saveAll(jokes);
 		} catch (IOException e) {
 			throw new RuntimeException("failed reading jokes from classpath", e);
 		}
+	}
+
+	public List<Joke> getAllJokes(Pageable pageable) {
+		return jokesRepository.findAll(pageable)
+				.getContent();
+	}
+
+	public Joke getJokeFilteredByCategory(String category) {
+		try {
+			Joke jokeDto = remoteApiService.getJokeFilteredByCategory(category).getJoke();
+			return createJoke(jokeDto);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+		}
+		return null;
+	}
+
+	public Joke createJoke(Joke joke) throws IllegalArgumentException {
+		if (joke == null || joke.getJoke() == null || joke.getJoke().isEmpty()) {
+			throw new IllegalArgumentException();
+		}
+		return jokesRepository.save(joke);
 	}
 }

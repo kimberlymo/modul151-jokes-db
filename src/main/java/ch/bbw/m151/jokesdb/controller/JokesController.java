@@ -2,28 +2,34 @@ package ch.bbw.m151.jokesdb.controller;
 
 import java.util.List;
 
-import ch.bbw.m151.jokesdb.datamodel.JokesEntity;
-import ch.bbw.m151.jokesdb.repository.JokesRepository;
+import ch.bbw.m151.jokesdb.datamodel.Joke;
+import ch.bbw.m151.jokesdb.service.JokesService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 public class JokesController {
 
-	private final JokesRepository jokesRepository;
+    private final JokesService jokesService;
 
-	public JokesController(JokesRepository jokesRepository) {
-		this.jokesRepository = jokesRepository;
-	}
+    /**
+     * @param pageable to be called with params `?page=3&size=5`
+     * @return hilarious content
+     */
+    @GetMapping
+    public List<Joke> getJokes(Pageable pageable) {
+        return jokesService.getAllJokes(pageable);
+    }
 
-	/**
-	 * @param pageable to be called with params `?page=3&size=5`
-	 * @return hilarious content
-	 */
-	@GetMapping("/jokes")
-	public List<JokesEntity> getJokes(Pageable pageable) {
-		return jokesRepository.findAll(pageable)
-				.getContent();
-	}
+    @GetMapping("/{category}")
+    public Joke getJokeFilteredByCategory(@PathVariable String category) {
+        return jokesService.getJokeFilteredByCategory(category);
+    }
+
+    @PostMapping
+    public Joke createJoke(@RequestBody Joke data) {
+        return jokesService.createJoke(data);
+    }
 }
