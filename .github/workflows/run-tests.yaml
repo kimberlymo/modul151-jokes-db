@@ -18,17 +18,18 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
-      - name: Build
-        run: mvn --batch-mode -DskipTests package
-
-      - name: Test
-        run: mvn --batch-mode -Dmaven.test.failure.ignore=true test
+      - name: Validate Gradle wrapper
+        uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
+        with:
+          arguments: build
 
       - name: Report
         uses: dorny/test-reporter@v1
         if: always()
         with:
           name: Maven Tests
-          path: target/surefire-reports/*.xml
+          path: build/reports/tests/test/index.html
           reporter: java-junit
           fail-on-error: true
