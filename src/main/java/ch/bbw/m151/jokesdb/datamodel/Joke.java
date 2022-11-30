@@ -30,4 +30,8 @@ public class Joke {
 
 	@UpdateTimestamp
 	private LocalDateTime updatedDate;
+
+	@OneToOne
+	@JoinColumn(name = "rating")
+	private JokeRating rating;
 }

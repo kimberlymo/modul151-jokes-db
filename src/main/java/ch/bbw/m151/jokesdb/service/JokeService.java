@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Optional;
 
 import ch.bbw.m151.jokesdb.datamodel.Joke;
 import ch.bbw.m151.jokesdb.repository.JokesRepository;
@@ -15,10 +16,12 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityExistsException;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class JokesService {
+public class JokeService {
 
 	private final JokesRepository jokesRepository;
 	private final RemoteApiService remoteApiService;
@@ -58,8 +61,15 @@ public class JokesService {
 
 	public Joke createJoke(Joke joke) throws IllegalArgumentException {
 		if (joke == null || joke.getJoke() == null || joke.getJoke().isEmpty()) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Joke is empty and cannot be processed");
 		}
+
+		Optional<Joke> isJokePresent = jokesRepository.findByJoke(joke.getJoke());
+
+		if (isJokePresent.isPresent()) {
+			throw new EntityExistsException(String.format("The joke %s already exists", joke.getJoke()));
+		}
+
 		return jokesRepository.save(joke);
 	}
 }

@@ -10,21 +10,19 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Mono;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class JokesDbApplicationTest implements WithAssertions {
+public class JokesDbApplicationTest extends TestHelper {
 
     @Autowired
     JokesRepository jokesRepository;
 
     @Autowired
     private WebTestClient webTestClient;
-    @Autowired
-    private RemoteApiService remoteApiService;
 
     @Test
     void jokesAreLoadedAtStartup() {
@@ -40,18 +38,29 @@ public class JokesDbApplicationTest implements WithAssertions {
                 .uri("/jokes?page={page}&size={size}", 1, pageSize)
                 .exchange()
                 .expectStatus()
-                .is2xxSuccessful();
-                //.expectBodyList(Joke.class)
-                //.hasSize(pageSize);
+                .is2xxSuccessful()
+                .expectBodyList(Joke.class)
+                .hasSize(pageSize);
     }
 
     @Test
-    void motd() throws Exception {
-        System.out.println(remoteApiService.getJokeFilteredByCategory("programming").getJoke());
+    void getJokeFilteredByCategory() {
+        webTestClient.get().uri("/jokes/programming")
+                .exchange()
+                .expectStatus()
+                .is2xxSuccessful();
     }
 
-    private Joke insertData() {
-        Joke testcase = new Joke().setJoke("ur mom");
-        return jokesRepository.save(testcase);
+    @Test
+    void createJoke() {
+        webTestClient.post().uri("/jokes")
+                .body(Mono.just(loadJokeForTests()), Joke.class)
+                .exchange()
+                .expectStatus()
+                .is2xxSuccessful()
+                .expectBody(Joke.class);
     }
+
+
+
 }

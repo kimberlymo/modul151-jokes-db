@@ -21,10 +21,6 @@ public class JokeRating {
     @Column(nullable = false)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "joke", nullable = false, updatable = false)
-    private Joke jokeId;
-
     @CreationTimestamp
     private LocalDateTime creationTimestamp;
 

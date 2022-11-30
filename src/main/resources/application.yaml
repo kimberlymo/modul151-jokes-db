@@ -8,6 +8,3 @@ spring:
     hibernate.ddl-auto: create
     database-platform: org.hibernate.dialect.PostgreSQL95Dialect
     open-in-view: false
-server:
-  servlet:
-    context-path: /jokes
