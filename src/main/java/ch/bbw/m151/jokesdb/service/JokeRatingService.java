@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -17,5 +19,15 @@ public class JokeRatingService {
             throw new IllegalArgumentException("The given Argument was NULL and cannot be processed");
         }
         return repository.save(rating);
+    }
+
+    public JokeRating getById(Integer id) {
+        Optional<JokeRating> rating = repository.findById(id);
+
+        if (rating.isEmpty()) {
+            throw new IllegalArgumentException("The entity with the id " + id + " does not exist!");
+        }
+
+        return rating.get();
     }
 }

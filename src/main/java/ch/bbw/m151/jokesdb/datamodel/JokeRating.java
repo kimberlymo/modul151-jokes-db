@@ -6,6 +6,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
 import java.time.LocalDateTime;
@@ -18,8 +20,7 @@ public class JokeRating {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(nullable = false)
-    private Long id;
+    private int id;
 
     @CreationTimestamp
     private LocalDateTime creationTimestamp;
@@ -27,7 +28,8 @@ public class JokeRating {
     @UpdateTimestamp
     private LocalDateTime updatedTimestamp;
 
-    @Size(max = 5, min = 1)
+    @Max(5)
+    @Min(0)
     private double stars;
 
     private String reasoning;

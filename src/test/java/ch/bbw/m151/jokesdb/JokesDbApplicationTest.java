@@ -1,6 +1,7 @@
 package ch.bbw.m151.jokesdb;
 
 import ch.bbw.m151.jokesdb.datamodel.Joke;
+import ch.bbw.m151.jokesdb.datamodel.JokeRating;
 import ch.bbw.m151.jokesdb.repository.JokesRepository;
 import ch.bbw.m151.jokesdb.service.RemoteApiService;
 import org.assertj.core.api.WithAssertions;
@@ -61,6 +62,14 @@ public class JokesDbApplicationTest extends TestHelper {
                 .expectBody(Joke.class);
     }
 
-
+    @Test
+    void createRating() {
+        webTestClient.post().uri("/rating")
+                .body(Mono.just(loadRatingForTests()), JokeRating.class)
+                .exchange()
+                .expectStatus()
+                .is2xxSuccessful()
+                .expectBody(JokeRating.class);
+    }
 
 }

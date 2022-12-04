@@ -72,4 +72,13 @@ public class JokeService {
 
 		return jokesRepository.save(joke);
 	}
+
+	public void deleteJoke(Integer id) {
+		Optional<Joke> isJokePresent = jokesRepository.findById(id);
+
+		if (isJokePresent.isEmpty()) {
+			throw new IllegalArgumentException("The joke with the id " + id + " does not exist!");
+		}
+		jokesRepository.delete(isJokePresent.get());
+	}
 }

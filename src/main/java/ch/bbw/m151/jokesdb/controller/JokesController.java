@@ -32,4 +32,9 @@ public class JokesController {
     public Joke createJoke(@RequestBody Joke data) {
         return jokesService.createJoke(data);
     }
+
+    @DeleteMapping("/jokes/{id}")
+    public void deleteJoke(@PathVariable Integer id) {
+        jokesService.deleteJoke(id);
+    }
 }
