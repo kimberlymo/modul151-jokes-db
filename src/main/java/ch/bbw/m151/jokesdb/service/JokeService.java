@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityExistsException;
+import javax.transaction.Transactional;
 
 @Service
 @Slf4j
@@ -49,6 +50,7 @@ public class JokeService {
 				.getContent();
 	}
 
+	@Transactional
 	public Joke getJokeFilteredByCategory(String category) {
 		try {
 			Joke jokeDto = remoteApiService.getJokeFilteredByCategory(category).getJoke();
