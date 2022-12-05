@@ -16,6 +16,13 @@ View | Tool Windows | Database | + | Data Source from URL
 jdbc:postgresql://localhost:5432/localdb
 User: localuser, Password: localpass
 ```
+
+## Focus
+The application focuses on backend features as well as Unit-Tests. There is a github actions workflow that runs all Unit-Tests after a push on a branch. This action shall help with testing and seeing if something broke during the change.
+
+Jokes can be created, deleted, and you can get a Joke. With the link `localhost:8080/jokes/${category}` you will get a Joke from an API. The category will define what kind of joke it will be for example programming or dark.
+Ratings can be created as well as viewed.
+
 ## Anforderungen
 WebFlux-Client-Anbindung an https://jokeapi.dev (read-only, d.h. ohne `/submit`)
 - **min**: hardcoded client für ein paar Usecases
@@ -34,3 +41,8 @@ WebFlux-Client-Anbindung an https://jokeapi.dev (read-only, d.h. ohne `/submit`)
 - **think-tank**: automatisierte CI-Tests bei jedem Commit und sinnvolle Coverage
   . Dokumentation
 - **min**: README mit einer Selbsteinschätzung, Diskussion der verwendeten Features und wo der Fokus gesetzt wurde.
+
+## Selbsteinschätzung
+Meiner Meinung nach ist der Code gut geschrieben und alle mindestens requirements wurden implementiert.
+Nebenbei konnte ich eine CI Pipeline erstellen sowie mehrere Tests. Aus diesen Features erwarte ich ca. eine 5.5, da der Code
+verständlich ist sowie auch die mindestens requirements übertroffen geworden sind.

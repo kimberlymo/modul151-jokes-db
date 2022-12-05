@@ -2,6 +2,7 @@ package ch.bbw.m151.jokesdb;
 
 import ch.bbw.m151.jokesdb.datamodel.Joke;
 import ch.bbw.m151.jokesdb.datamodel.JokeRating;
+import ch.bbw.m151.jokesdb.repository.JokeRatingRepository;
 import ch.bbw.m151.jokesdb.repository.JokesRepository;
 import ch.bbw.m151.jokesdb.service.RemoteApiService;
 import org.assertj.core.api.WithAssertions;
@@ -20,7 +21,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class JokesDbApplicationTest extends TestHelper {
 
     @Autowired
-    JokesRepository jokesRepository;
+    private JokesRepository jokesRepository;
+
+    @Autowired
+    private JokeRatingRepository ratingRepository;
 
     @Autowired
     private WebTestClient webTestClient;
@@ -72,4 +76,13 @@ public class JokesDbApplicationTest extends TestHelper {
                 .expectBody(JokeRating.class);
     }
 
+    @Test
+    void getJokeRatingById() {
+        JokeRating rating = ratingRepository.save(loadRatingForTests());
+        webTestClient.get().uri("/rating/" + rating.getId())
+                .exchange()
+                .expectStatus()
+                .is2xxSuccessful()
+                .expectBody(JokeRating.class);
+    }
 }

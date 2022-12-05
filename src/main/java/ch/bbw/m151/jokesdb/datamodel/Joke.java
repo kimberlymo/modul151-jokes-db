@@ -31,7 +31,7 @@ public class Joke {
 	@UpdateTimestamp
 	private LocalDateTime updatedDate;
 
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name = "rating")
 	private JokeRating rating;
 }

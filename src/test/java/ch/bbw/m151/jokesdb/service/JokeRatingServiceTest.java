@@ -1,7 +1,6 @@
 package ch.bbw.m151.jokesdb.service;
 
 import ch.bbw.m151.jokesdb.TestHelper;
-import ch.bbw.m151.jokesdb.datamodel.Joke;
 import ch.bbw.m151.jokesdb.datamodel.JokeRating;
 import ch.bbw.m151.jokesdb.repository.JokeRatingRepository;
 import org.junit.jupiter.api.Assertions;
